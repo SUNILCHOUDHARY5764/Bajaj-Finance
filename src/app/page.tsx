@@ -47,11 +47,11 @@ export default function Home() {
     }, {} as Partial<Pick<ApiResponse, FilterableKey>>);
 
     return (
-      <div className="p-3 bg-gray-100 rounded-md">
+      <div className="p-4 bg-gray-50 border rounded-lg shadow-md animate-fadeIn">
         {Object.entries(filteredData).map(([key, value]) => (
-          <div key={key} className="mb-2">
-            <strong className="text-blue-600">{key.replace("_", " ")}:</strong>
-            <span className="ml-2">{value?.join(", ")}</span>
+          <div key={key} className="mb-3">
+            <strong className="text-indigo-600">{key.replace("_", " ")}:</strong>
+            <span className="ml-2 text-gray-800">{value?.join(", ")}</span>
           </div>
         ))}
       </div>
@@ -59,10 +59,10 @@ export default function Home() {
   };
 
   return (
-    <div className="p-6 max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold text-center mb-6">22BCS50158</h1>
+    <div className="p-8 max-w-2xl mx-auto bg-white shadow-lg rounded-lg mt-10">
+      <h1 className="text-3xl font-bold text-center text-indigo-700 mb-6">22BCS50158</h1>
       
-      <label htmlFor="jsonInput" className="block font-medium mb-2">
+      <label htmlFor="jsonInput" className="block font-medium text-gray-700 mb-2">
         API Input
       </label>
       <textarea
@@ -70,49 +70,56 @@ export default function Home() {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder='{"key": "value"}'
-        className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
+        className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-3 resize-none"
         rows={4}
       />
       <button
         onClick={handleSubmit}
-        className="w-full bg-blue-500 text-white font-semibold py-2 rounded-md hover:bg-blue-600 transition"
+        className="w-full bg-indigo-600 text-white font-semibold py-2 rounded-md hover:bg-indigo-700 transition-transform transform hover:scale-105"
       >
         Submit
       </button>
-      {error && <p className="text-red-600 mt-2 text-center">{error}</p>}
+      {error && <p className="text-red-600 mt-2 text-center font-medium">{error}</p>}
 
       {response && (
         <div className="mt-6">
-          <label className="block font-medium mb-2">Multi Filter</label>
-          <div className="grid grid-cols-3 gap-3 mb-4">
+          <label className="block font-medium text-gray-700 mb-2">Multi Filter</label>
+          <div className="flex flex-wrap gap-3 mb-4">
             {filterableKeys.map((filter) => (
-              <label key={filter} className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={selectedFilters.includes(filter)}
-                  onChange={() => toggleFilter(filter)}
-                  className="w-4 h-4 text-blue-600"
-                />
-                <span className="text-gray-700">{filter.replace("_", " ")}</span>
-              </label>
+              <button
+                key={filter}
+                onClick={() => toggleFilter(filter)}
+                className={`px-4 py-2 rounded-lg font-medium shadow-md transition transform hover:scale-105 ${
+                  selectedFilters.includes(filter)
+                    ? "bg-indigo-600 text-white"
+                    : "bg-gray-200 text-gray-700"
+                }`}
+              >
+                {filter.replace("_", " ")}
+              </button>
             ))}
           </div>
 
-          <div className="flex flex-wrap gap-2 mb-4">
-            {selectedFilters.map((filter) => (
-              <div key={filter} className="flex items-center bg-gray-200 px-3 py-1 rounded-full text-sm">
-                <span>{filter.replace("_", " ")}</span>
-                <button
-                  onClick={() => toggleFilter(filter)}
-                  className="ml-2 text-red-500 hover:text-red-700"
+          {selectedFilters.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-4">
+              {selectedFilters.map((filter) => (
+                <div
+                  key={filter}
+                  className="flex items-center bg-gray-200 px-3 py-1 rounded-full text-sm"
                 >
-                  x
-                </button>
-              </div>
-            ))}
-          </div>
+                  <span>{filter.replace("_", " ")}</span>
+                  <button
+                    onClick={() => toggleFilter(filter)}
+                    className="ml-2 text-red-500 hover:text-red-700 font-bold"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
 
-          <h2 className="text-xl font-semibold mb-2">Filtered Response</h2>
+          <h2 className="text-xl font-semibold mb-2 text-indigo-700">Filtered Response</h2>
           {renderFilteredResponse()}
         </div>
       )}
